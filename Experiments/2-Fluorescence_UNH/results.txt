@@ -1,0 +1,60 @@
+================ FINAL FLUORESCENCE BANDS ================
+v=0  D=13.63153±0.00538 cm  lambda=497.128±42.513 nm  nu_bar=20115.53±1720.20 cm^-1
+v=1  D=13.93486±0.00501 cm  lambda=530.868±42.504 nm  nu_bar=18837.08±1508.20 cm^-1
+v=2  D=14.22790±0.00507 cm  lambda=545.157±42.503 nm  nu_bar=18343.35±1430.15 cm^-1
+
+================ ADJACENT SPACINGS ================
+(0-0) -> (0-1): 1278.45 ± 2287.74 cm^-1
+(0-1) -> (0-2): 493.73 ± 2078.46 cm^-1
+
+Mean adjacent spacing = 886.09 cm^-1
+SEM from band-to-band spread = 392.36 cm^-1
+
+================ VIBRONIC REGRESSION ================
+nu_00 = 19950.88 ± 1529.13 cm^-1
+omega_e = 860.67 ± 1111.89 cm^-1
+R^2 = 0.937752
+
+================ 0-0 TRANSITION ================
+lambda_00 = 497.128 ± 42.513 nm
+nu_00 = 19950.88 ± 1529.13 cm^-1
+E_00 = 2.473594 ± 0.189587 eV
+
+================ FORCE CONSTANT ================
+f = (6.98260e+05 ± 1.80e+06) dyn/cm
+f = (6.98260e+02 ± 1.80e+03) N/m
+
+
+================ ERROR BUDGET ================
+
+Instrumental/readout:
+  Drum LC = 0.010 cm
+  Drum reading uncertainty = ±0.00500 cm (half least count)
+  Galvanometer LC = 0.100 × 100 nA
+  Galvanometer reading uncertainty = ±0.05000 × 100 nA (half least count)
+
+Calibration:
+  Polynomial training RMSE = 20.5847 nm
+  LOOCV calibration uncertainty = 42.5029 nm
+
+Statistical/internal consistency:
+  Adjacent spacing SEM = 392.3616 cm^-1
+  Weighted-fit uncertainty in omega_e = 1111.8931 cm^-1
+
+Systematic effects that cannot be reliably assigned numerical values
+from this single scan:
+  • mechanical backlash
+  • slit-width / instrumental spectral resolution
+  • PMT gain drift
+  • lamp intensity drift
+  • background / stray light
+  • unresolved Hg doublets
+  • incorrect peak assignment
+  • interpolation/model inadequacy
+
+Do not combine these unquantified systematic effects into a numerical ± error unless they were experimentally measured (for example by repeated scans, reverse-direction scans, independent calibration, background measurements, or resolution measurements).
+
+Band results saved to:
+uranyl_vibronic_band_results.csv
+
+================ ANALYSIS COMPLETE ================
