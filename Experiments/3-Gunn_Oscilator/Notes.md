@@ -141,16 +141,104 @@ Note also: **λg ≠ λ₀ (free-space wavelength)**. Waveguide propagation is d
 
 ## 5. Data Analysis — Part by Part
 
-### (a) I–V characteristic and threshold voltage
-- Plot I (mA, y-axis) vs V (Volts, x-axis) for each micrometer setting on the *same* linear graph for comparison.
-- Identify V₀ as the peak of the curve (the last point before the current systematically decreases with increasing bias — do this by eye/local averaging, since real data will be noisy near the broad peak).
-- Repeat at a second micrometer position (e.g. ~8 mm) — note whether V₀ shifts. Physically it shouldn't shift dramatically with micrometer position, since V₀ is a bulk material/geometry property (Eth·d) not a cavity-tuning property; if you *do* see a shift, discuss whether it's within experimental scatter or a systematic effect (e.g. self-heating changing the effective d or mobility slightly, or genuine contact/parasitic-resistance differences at different micrometer-induced coupling conditions).
-- **Report uncertainty in V₀**: since the peak is broad (not a sharp cusp), quote V₀ ± half the voltage step size around the visually flat top, or better, fit a parabola to the 4–6 points around the peak and take the vertex — this gives a more defensible, less subjective V₀ and a natural way to assign an uncertainty (from the fit).
+### (a) I–V characteristic and threshold voltage — including how to handle the fluctuating/oscillatory region
 
-### (b) Micrometer vs. frequency
-- Plot frequency (from the frequency-meter dial) vs. Gunn-assembly-tuning-micrometer reading, for at least two different Gunn bias values (two curves on one graph, or two separate graphs).
-- Expect a roughly monotonic tuning curve over a limited range (mechanical/cavity tuning is not unlimited — the diode's intrinsic transit-time frequency sets the center, and the cavity only "pulls" it over some tens of MHz to a few hundred MHz, small compared to the ~10 GHz carrier).
-- Compare the *change in slope* between the two Gunn-bias curves if visible — higher bias generally shifts operating point and can shift the pulling range.
+**Recognize the four (not two) regimes in your own data.** Real student data (like yours) on this experiment essentially always shows four distinct regions as you sweep bias up from zero, not just a clean "rise then fall":
+
+1. **Low-field Ohmic region** (roughly 0.1 V up to ~2.5–2.8 V in your 5 mm run): current rises smoothly and close to linearly. Nearly all electrons are still in the light-mass Γ-valley; this is ordinary Ohmic conduction.
+2. **Near-threshold quasi-saturation** (~2.9–3.3 V, where your current plateaus around 500–501 mA): the rate of rise slows sharply and current appears to "cap out." This is the region right around V₀ where inter-valley transfer is starting to compete with the increasing field — the static differential conductance dI/dV is falling toward zero here.
+3. **NDM onset / sudden drop**: immediately after the plateau you see a sharp, single-valued drop (in your data, roughly 501 mA → ~315 mA over a small voltage change). This is the device crossing into net negative differential mobility and beginning to sustain a traveling high-field domain.
+4. **Sustained-oscillation (fluctuating) region**: this is your "oscillatory and fluctuatory" region, and it is the most important one to understand correctly. **This is not measurement error and not a sign you did something wrong.** Once a domain is continuously nucleating, transiting, and being extinguished at the anode (§2.4), the *instantaneous* terminal current is genuinely oscillating at the transit-time frequency (~GHz). Your panel meter (DPM) cannot track a GHz oscillation — it displays some time-average of it — but three things make that time-average itself unstable and non-repeatable at fixed knob position: (i) the DPM's own integration/response time only partially averages the fast oscillation, so its displayed value drifts depending on exactly which few milliseconds it's sampling; (ii) domain nucleation is not perfectly periodic — there is timing jitter, and the device can intermittently "mode-hop" between slightly different numbers of domains in transit or slightly different domain velocities, each of which corresponds to a different average current; (iii) because the diode's dynamic negative resistance interacts with the finite output impedance of your DC power supply, small relaxation oscillations can appear in the **bias voltage itself**, which is exactly why you also see the *voltage* jittering, not just the current, and why some of your recorded points even show voltage decreasing slightly between successive rows despite the sweep nominally going up. Eventually (in your data, above roughly 4.2–5 V) the device settles into a **sustained, fully periodic oscillation state** whose time-averaged current vs. bias becomes smooth again — but at a *much flatter* slope than the naive NDM picture would suggest, because the domain itself now self-regulates the internal field. This is why your data goes fluctuating → smooth-but-slowly-varying (roughly flat, then a gentle decline from ~420 mA down to ~396 mA by 8 V) rather than continuing to plunge.
+
+**How to plot it:**
+- Do **not** draw one single connected smooth line through the entire fluctuating region — that manufactures a false sense of precision. Instead:
+  - Plot regions 1–3 (Ohmic rise through the sharp drop) as a normal connected line/curve — these points are single-valued and repeatable.
+  - Plot region 4 (fluctuating region) as a **scatter of individual points** (no connecting line), so the spread is visible to the reader. If your raw data has multiple current readings recorded near the same nominal voltage (as yours does — e.g., several entries clustered around V ≈ 3.2–3.7 V with currents ranging from ~320 to ~411 mA), plot all of them as separate points at their own (V, I) coordinates rather than averaging them away silently.
+  - Once the data becomes smooth again at higher bias (region 5, e.g. above ~4.2–5 V in your run), switch back to a connected line/curve — this part is real, repeatable, quasi-static behavior of the sustained-oscillation state and should be treated normally, including a linear fit if it looks linear (see Error Analysis below).
+  - Add a shaded band or bracket on the x-axis labelled "domain-oscillation / unstable regime" over region 4 so a reader immediately understands why the data looks different there — this is expected physics, and saying so explicitly in your report turns what looks like "bad data" into a correctly-identified physical regime.
+
+- **Locating V₀:** use the onset of the *sharp drop* (start of region 3) as your primary criterion for V₀, since this is the actual threshold field crossing. As a cross-check, also note the bias at which sustained fluctuation *begins* (start of region 4) — physically these should very nearly coincide, but a small gap between them is itself meaningful (it reflects the short delay/hysteresis between the point where the static I-V first goes non-monotonic and the point where a fully-formed domain is actually launched and sustained). Report both bias values if they differ, and briefly note the gap rather than silently picking one.
+- **Uncertainty in V₀:** since the plateau/drop is not a sharp cusp, fit a smooth curve (e.g. a local polynomial) to the 5–8 points spanning the plateau-into-drop and take the inflection/maximum from the fit rather than eyeballing a single row of the table; quote V₀ ± half your voltage step size as a floor on the uncertainty even after fitting.
+- Repeat this whole analysis for your second micrometer setting (8 mm) — your 8 mm data shows the same four-regime structure (Ohmic rise to ~501 mA plateau near 3.0–3.3 V, then an explicit "Fluctuations →" region you've already flagged by hand through roughly 3.4–5.4 V, then smoothing out again above ~5.5 V). Compare V₀ between the two micrometer settings; since V₀ = Eth·d is a bulk material/geometry property, not a cavity-tuning property, the two values should agree within your uncertainty — if they don't, discuss whether it's within scatter or a real systematic effect (self-heating, slightly different effective coupling/contact conditions at different micrometer settings).
+
+### (b) Gunn as a source of microwaves — detailed procedure and analysis
+
+**Step-by-step procedure** (the manual's version skips several practical steps you actually need on the bench):
+
+1. Before switching anything on, confirm both the GUNN bias knob and the PIN bias knob are full CCW (minimum), exactly as the safety note under part (a) requires.
+2. Set the Gunn-assembly tuning micrometer to a fixed reference position (e.g. 5 mm, matching your part (a) run).
+3. Switch on the Gunn power supply, the VSWR meter, and the CRO. Set the **modulation selector switch on the Gunn power supply to MOD** (not CW). This is essential and easy to miss: a truly continuous, unmodulated microwave carrier produces no AC signal for a VSWR meter (which is an AF amplifier tuned near ~1 kHz) to lock onto — you need the PIN diode chopping the carrier into a square wave before the VSWR meter can show you anything.
+4. Gradually increase the Gunn bias while watching the DPM, using your part (a) data as a guide, until you are clearly inside the **sustained-oscillation region** (region 4/5 as identified in part (a) above) — below V₀ there is no microwave emission at all, only DC current.
+5. Set the PIN bias to roughly the midpoint of its range (knob "midway between full CCW and full CW," as the manual says) — this gives close to maximum, clearly-visible modulation depth to work with.
+6. On the CRO, adjust the time base and vertical gain until you can clearly see a square wave. If you see nothing: check that the slotted-line probe isn't sitting at a field null, that the attenuator isn't set too high, and that the Gunn bias is genuinely above V₀ (step 4).
+7. Slide the slotted-section probe along the guide to the position of **maximum** indicator deflection (a field maximum) — you want the best signal-to-noise for the frequency reading that follows.
+8. With the signal maximized, tune the **modulation-frequency knob** on the Gunn power supply (this sets the audio-rate square-wave chopping frequency fed to the PIN diode — a completely separate, much lower frequency than the ~10 GHz microwave carrier) until the VSWR-meter indicator reading is maximized. This matters because the VSWR meter's internal amplifier is tuned near a specific audio frequency (often ~1 kHz); if your PIN chopping rate doesn't match it, the meter under-reads even though the microwave signal itself is fine.
+9. Note the Gunn bias voltage (DVM) you're using. Now slowly rotate the **frequency meter's** micrometer dial through its range while watching the indicator — at resonance you will see a **dip** (absorption of a small notch of power). At the point of the deepest/sharpest dip, read the operating frequency directly off the frequency meter's calibrated dial.
+10. Without touching the Gunn bias, change **only the Gunn-assembly tuning micrometer** to a new position and repeat step 9 — this builds one frequency-vs-micrometer curve at fixed Gunn bias.
+11. Return the Gunn-assembly micrometer to its original reference and instead change the **Gunn bias** to a second fixed value (still safely inside the oscillation region), then repeat steps 8–10 to get a second curve.
+
+**Analysis:**
+- Plot frequency (y-axis, from the frequency-meter dial) vs. Gunn-assembly-tuning-micrometer reading (x-axis), as two separate curves — one per Gunn bias value used.
+- Expect a roughly monotonic but *bounded* tuning curve: the cavity only "pulls" the diode's intrinsic transit-time frequency over a limited range (tens to a few hundred MHz), small compared to the ~10 GHz carrier itself — don't expect huge frequency swings across the micrometer's travel.
+- Compare the two curves: a shift in the curve (not just its range) between the two Gunn-bias values shows that bias changes the operating point (and hence which part of the domain-formation dynamics sets the frequency), on top of the purely mechanical cavity-length effect of the micrometer.
+
+### (c) Characteristics of the PIN modulator — detailed procedure and analysis
+
+**Step-by-step procedure:**
+
+1. Start from a working configuration from part (b) that gave a strong, clean square wave on the CRO (same Gunn bias, Gunn-micrometer setting, and probe position).
+2. Tune to a suitable, convenient frequency and set the (uncalibrated) attenuator to a fixed reference value, e.g. ~3 dB (note this value — you will need it as a fixed reference so the CRO signal stays on-scale as you vary PIN bias in the following steps).
+3. Set the **CRO input coupling to DC**, not AC. This is essential: you need the *absolute* Vmax and Vmin levels relative to true zero, not just the peak-to-peak swing — AC coupling strips out the DC reference and makes the individual Vmax/Vmin readings meaningless (only their difference would survive, which is not enough to compute %m).
+4. Establish the true zero level: momentarily ground the CRO input channel and mark where the trace sits on the graticule — this is your reference for "0 volts" for every reading that follows. Re-check this occasionally, since scope DC offset can drift over a session.
+5. Reconnect the detector output and adjust vertical gain/time base for a large, clearly readable square wave that doesn't clip off the top or bottom of the screen.
+6. Starting from PIN bias at (or near) zero, step the PIN bias up through its range in convenient, regular increments (8–12 points is enough to trace the full curve). At **each** setting: read the PIN bias value (via the DVM/CRO as connected through the BNC T-connector, per the manual), and read Vmax (top of the square wave) and Vmin (bottom) directly off the CRO screen relative to the zero line from step 4.
+7. Compute %m = (Vmax − Vmin)/(Vmax + Vmin) × 100 at each PIN bias value.
+
+**Analysis:**
+- Plot %m (y-axis) vs PIN bias (x-axis). Expect %m to start near 0% (PIN diode still low-resistance/"ON," barely chopping the carrier), rise steeply through an intermediate bias range as the PIN diode's resistance climbs toward its high-resistance "OFF" state, then flatten into a plateau once the diode is fully blocking and further bias no longer changes the (already very high) isolation resistance.
+- This curve is, physically, just the PIN diode's own resistance-vs-bias transfer characteristic viewed through the modulation-depth formula — say so explicitly in your report, since it directly explains the S-shaped/saturating curve you should observe.
+
+### (d) Response law of the detector — detailed procedure and analysis
+
+**Method (i) — square-modulated microwaves, VSWR meter:**
+
+1. Set up MOD mode with a clean, strong square wave as in parts (b)/(c).
+2. Connect the crystal-detector mount (in place of the CRO) to the VSWR meter input.
+3. Set the VSWR meter's gain control near maximum, but confirm the needle isn't pinned/overloaded.
+4. Slide the slotted-line probe to the position of maximum field and **lock it there** for the whole of Method (i) — unlike Method (ii), you are not scanning probe position here, only the attenuator.
+5. Adjust the attenuator and VSWR fine-gain together so the needle sits at a convenient full-scale reference mark (e.g. 0 dB) on the VSWR dB scale, at your starting attenuator setting. Note both readings.
+6. Increase the attenuator in small, regular steps; at each step record (i) the attenuator micrometer reading and (ii) the resulting VSWR-meter dB reading. Continue until the reading approaches the bottom of the scale or becomes noise-limited.
+7. Change the VSWR gain to a new fixed (lower) setting — this samples a different absolute input power range — and repeat steps 5–6. Do this at 3–4 different gain settings so you can compare the exponent n across different power levels, per the manual's instruction to determine n "at several VSWR gains in decreasing order."
+8. For each gain-setting run, plot attenuator setting (x, decreasing to the right, per the manual's convention) vs. VSWR-meter dB reading (y) on a **linear** graph; a straight-line region with slope ≈ 1 confirms square-law behavior (n ≈ 2) in that power range, and you'll see the slope departing from 1 wherever the detector leaves the square-law region.
+
+**Method (ii) — unmodulated CW microwaves, micro-ammeter, standing-wave scan:**
+
+1. Switch the Gunn power supply's modulation selector to **CW** (not MOD).
+2. Physically **disconnect the PIN bias cable** from the PIN diode — the PIN modulator plays no role in this method.
+3. Connect the detector output to a **micro-ammeter** instead of the VSWR meter — with an unmodulated CW carrier there is no audio-rate envelope for the VSWR meter's tuned amplifier to lock onto, so you must read the detector's raw rectified DC current directly.
+4. With the slotted section shorted at the far end (as already wired), slide the probe along the line while watching the micro-ammeter to locate a sharp current **minimum** (null) — fine-adjust position for the lowest, most well-defined reading; minima are much easier to locate precisely than the broad maxima.
+5. Take this minimum's position as your reference x = 0. Record the (near-zero) current here.
+6. Move the probe in small, regular steps toward the neighboring maximum, recording probe position (from the slotted line's built-in position scale) and micro-ammeter current at every step. Continue past the maximum to the following minimum if you can — a full period gives a much more robust λg than a single half-period.
+7. From the spacing between successive minima, compute λg = 2 × (spacing between adjacent minima) — remember the *current/power* pattern has period λg/2, so don't mistake this spacing directly for λg without the factor of 2 (see §4.4 above).
+8. For every recorded (position, current) pair, compute sin(2πx′/λg), where x′ is the distance from your chosen reference minimum. Plot log(I) vs. log|sin(2πx′/λg)| on log-log paper (or take logs numerically and use a linear graph) — the slope of the resulting straight line is n.
+9. Repeat the full scan at several different attenuator settings between 0 dB and 10 dB, exactly as the manual specifies, to map how n changes with input power — and compare against your Method (i) results at similar power levels as a consistency check.
+
+### (e) Calibrate the micrometer attenuator — detailed procedure and analysis
+
+**Step-by-step procedure:**
+
+1. Set up MOD mode with a clean square wave on the CRO, as in part (c), with **both** the calibrated (reference) attenuator and the uncalibrated micrometer attenuator present in the chain.
+2. Set the calibrated attenuator to 0 dB.
+3. Adjust the CRO vertical gain so the square wave's top level sits at a clear, easily-read graticule division, with full-scale (unclipped) deflection.
+4. Record this top-level reading as your reference.
+5. Increase the **calibrated** attenuator in known steps (e.g. 1, 2, 3, … dB); at each step, record the new (reduced) top-level reading of the square wave on the CRO — this is simply mapping out how the CRO trace height falls with known, exact dB increments.
+6. Return the calibrated attenuator to 0 dB.
+7. Now, instead, adjust the **uncalibrated** micrometer attenuator away from its reference position until the square wave's top level reproduces the *exact* reduced level you recorded in step 5 for a chosen dB value.
+8. Record the micrometer reading that reproduces that level — this micrometer position is now known to correspond to that dB value.
+9. Repeat steps 7–8 for each dB step recorded in step 5, building up a table of (micrometer reading, equivalent dB).
+
+**Analysis:**
+- Plot micrometer reading (x-axis) vs. attenuator dB (y-axis). Do **not** force a straight-line fit through this data: mechanical vane insertion depth versus dB attenuation is not linear in general (attenuation grows roughly exponentially with penetration into the field region for a resistive-vane attenuator), so present it as a smooth calibration curve (or simply a lookup table) and note the range over which the mapping is monotonic and usable.
 
 ### (c) PIN modulator: % modulation vs bias
 - Compute %m = (Vmax − Vmin)/(Vmax + Vmin) × 100 for each PIN bias setting (using CRO-read Vmax/Vmin relative to true zero, found by grounding the input).
@@ -182,6 +270,16 @@ Note also: **λg ≠ λ₀ (free-space wavelength)**. Waveguide propagation is d
 - **Non-ideal isolator/mismatches**: residual reflections from imperfect isolator isolation or connector mismatches (VSWR of the connectors/adapters themselves, not just the diode under test) will imprint small ripples on what should be smooth I vs x or I vs attenuator-dB curves — if you see small periodic ripples riding on your main trend, this is the likely cause, not random noise.
 - **Non-square-law departure treated as "error" rather than physics**: be careful in your report to distinguish genuine measurement error/uncertainty from the *physical* deviation of n from 2 at high power — the latter is the actual physics result of part (d), not a mistake to be corrected for.
 - **Frequency meter reading vs. actual oscillation frequency**: the resonant absorption dip has some finite width (loaded Q of the wavemeter cavity), so there's an inherent resolution limit (typically a few MHz) in reading the dial at the dip center — take the reading at the point of maximum dip (minimum indicator reading), which is more precisely locatable than the dip's edges.
+
+### 6.3a Error analysis specific to the fluctuating/oscillatory region of part (a)
+
+This deserves separate treatment because it is a genuinely different *kind* of error from everything else in §6.1–6.2, and treating it the same way (e.g. quoting ± half a meter division) will understate your real uncertainty by an order of magnitude.
+
+- **The dominant error source in region 4 is physical, not instrumental.** Across your data, the spread of current readings clustered near a given nominal voltage in the oscillatory region is on the order of 50–90 mA (e.g. multiple entries near V ≈ 3.2–3.7 V ranging roughly from 320 to 411 mA), whereas your DPM's own resolution/last-digit precision elsewhere in the table is ~1 mA. That is a ~50–90× larger spread than instrumental resolution alone would predict — the correct conclusion is that the dominant uncertainty here comes from the diode's own dynamical instability (domain-transit oscillation, nucleation jitter, occasional mode-hopping, and bias-circuit relaxation oscillations feeding back through the supply's output impedance — see the region-4 discussion in §5(a) above), not from you or your meter.
+- **How to quantify it:** for each nominal voltage setting in the fluctuating region, take **several repeated readings over a short time window** (rather than a single instantaneous reading) if your bench time allows, and report the **mean ± half the observed range** (or the sample standard deviation, if you have ≥4–5 repeats) as your error bar — not the meter's nominal resolution. If you only have one reading per nominal voltage (as in a single sweep), you can still estimate a representative fluctuation magnitude by looking at the scatter of nearby points within a small voltage window and using that local scatter as your error-bar size for the whole region — state clearly in your report which of these two approaches you used.
+- **Do not attempt a single differential-resistance (dV/dI) number for the whole oscillatory region.** Because the instantaneous operating point is not well-defined there (the system genuinely visits a range of quasi-states rather than sitting at one), a single slope number would misrepresent the physics. Instead report the region descriptively: identify its voltage extent, its mean current level and typical spread, and note that no single differential resistance is meaningful there — this is itself a legitimate, complete answer for that part of your I-V characterization.
+- **The higher-bias smooth region (above where fluctuations die out) can and should be treated normally**: fit it with a simple linear (or low-order polynomial) least-squares fit, and quote a slope with its standard error exactly as you would for the low-field Ohmic region — this is real, repeatable quasi-static behavior of the sustained-oscillation state, not noise.
+- **If you also observe the bias voltage itself fluctuating** (not just current) at fixed knob position in this region, note this explicitly as evidence for the bias-circuit relaxation-oscillation mechanism described in §5(a), and — if you want a cleaner practical fix for future runs — mention that inserting a small series resistance or ensuring the power supply's output impedance is low relative to the diode's negative differential resistance is the standard mitigation, though for this write-up simply documenting and quantifying the fluctuation is the expected deliverable.
 
 ### 6.3 Propagating errors into derived quantities
 - For **d (thickness) estimated from Eth = V₀/d** (Question 2): since d = V₀/Eth, and you're given Eth as a fixed constant (36 kV/cm) with your own measured V₀ carrying uncertainty δV₀ (from §5(a)), propagate simply as δd/d = δV₀/V₀ (assuming Eth is treated as exact, as given in the question) — quote d with this propagated uncertainty.
