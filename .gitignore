@@ -1,1 +1,9 @@
 Private/
+*/Private
+*/Private/
+.venv/
+.venv
+*/.venv/
+*/.venv
+*/__pycache__
+*/__pycache__/
